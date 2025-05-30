@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.820.0",
+    "@aws-sdk/credential-provider-sso": "^3.817.0",
+    "@aws-sdk/s3-request-presigner": "^3.820.0",
+    "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-slot": "^1.2.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
