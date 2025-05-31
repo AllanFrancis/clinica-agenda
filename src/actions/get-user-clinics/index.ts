@@ -28,6 +28,7 @@ export const getUserClinicsAction = async () => {
   return userClinics.map((userClinic) => ({
     id: userClinic.clinic.id,
     name: userClinic.clinic.name,
+    logo: userClinic.clinic.logo,
     createdAt: userClinic.clinic.createdAt,
     updatedAt: userClinic.clinic.updatedAt,
     joinedAt: userClinic.createdAt,

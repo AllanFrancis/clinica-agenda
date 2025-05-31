@@ -58,6 +58,7 @@ export async function AppSidebarServer({
   let clinics: {
     id: string;
     name: string;
+    logo: string | null;
     createdAt: Date;
     updatedAt: Date | null;
     joinedAt: Date;
@@ -71,9 +72,13 @@ export async function AppSidebarServer({
   }
 
   const user = {
+    id: session.user.id,
     name: session.user.name || "Usuário",
     email: session.user.email || "",
-    avatar: session.user.image || "https://i.pravatar.cc/300",
+    emailVerified: session.user.emailVerified,
+    createdAt: session.user.createdAt,
+    updatedAt: session.user.updatedAt,
+    image: session.user.image || "",
   };
 
   return (
