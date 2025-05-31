@@ -16,18 +16,8 @@ const OnboardingPage = async () => {
   }
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-gray-50">
-      <div className="w-full max-w-2xl">
-        <div className="mb-8 text-center">
-          <h1 className="mb-2 text-3xl font-bold text-gray-900">
-            Bem-vindo à Clínica Agenda!
-          </h1>
-          <p className="text-gray-600">
-            Para começar, vamos criar sua primeira clínica
-          </p>
-        </div>
-        <OnboardingForm />
-      </div>
+    <div className="from-primary/50 to-primary-foreground flex min-h-screen items-center justify-center bg-gradient-to-br p-4">
+      <OnboardingForm />
     </div>
   );
 };

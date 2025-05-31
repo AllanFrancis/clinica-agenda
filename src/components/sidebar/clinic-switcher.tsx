@@ -1,6 +1,7 @@
 "use client";
 
 import { Building2, ChevronsUpDown, Plus } from "lucide-react";
+import Link from "next/link";
 import * as React from "react";
 
 import {
@@ -110,14 +111,14 @@ export function ClinicSwitcher({ clinics }: { clinics: Clinic[] }) {
             ))}
             <DropdownMenuSeparator />
             <DropdownMenuItem className="gap-2 p-2" asChild>
-              <a href="/clinic-form">
+              <Link href="/onboarding">
                 <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                   <Plus className="size-4" />
                 </div>
                 <div className="text-muted-foreground font-medium">
                   Adicionar nova
                 </div>
-              </a>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -10,7 +10,13 @@ import * as z from "zod";
 
 import { createClinicAction } from "@/actions/create-clinic";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -90,89 +96,92 @@ export function OnboardingForm() {
   };
 
   return (
-    <Card className="mx-auto shadow-lg">
+    <Card className="w-full max-w-md border-0 shadow-xl">
       <CardHeader className="text-center">
-        <CardTitle className="flex items-center justify-center gap-2">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
           <Building2 className="h-6 w-6 text-blue-600" />
-          Criar sua primeira clínica
-        </CardTitle>
+        </div>
+        <CardTitle className="text-2xl font-bold">Criar sua clínica</CardTitle>
+        <CardDescription>
+          Configure sua clínica em poucos passos
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Upload de Logo */}
             <div className="space-y-2">
-              <Label htmlFor="logo">Logo da clínica (opcional)</Label>
-              <div className="flex flex-col items-center space-y-4">
-                {" "}
-                {logoUrl ? (
-                  <div className="relative">
-                    <Image
-                      src={logoUrl}
-                      alt="Logo da clínica"
-                      className="rounded-lg border border-gray-200 object-contain"
-                      width={96}
-                      height={96}
-                    />
+              <Label htmlFor="logo" className="flex">
+                Logo da clínica{" "}
+                <span className="text-muted-foreground">(opcional)</span>
+              </Label>{" "}
+              {logoUrl ? (
+                <div className="relative">
+                  <Image
+                    src={logoUrl}
+                    alt="Logo da clínica"
+                    className="rounded-lg border border-gray-200 object-contain"
+                    width={96}
+                    height={96}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="mt-2"
+                    onClick={() => {
+                      setLogoUrl(null);
+                    }}
+                  >
+                    Remover
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex w-full flex-col">
+                  <div className="rounded-lg border-2 border-dashed border-gray-300 p-6 text-center transition-colors hover:border-gray-400">
+                    <Upload className="mx-auto mb-2 h-8 w-8 text-gray-400" />
+                    <p className="mb-2 text-sm text-gray-600">
+                      Clique para fazer upload do logo
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      PNG, JPG ou JPEG até 5MB
+                    </p>
+                  </div>
+                  <input
+                    id="logo"
+                    type="file"
+                    accept="image/*"
+                    onChange={onFileChange}
+                    className="hidden"
+                    disabled={isUploading}
+                  />
+                  <label
+                    htmlFor="logo"
+                    className={`cursor-pointer ${
+                      isUploading ? "pointer-events-none opacity-50" : ""
+                    }`}
+                  >
                     <Button
                       type="button"
                       variant="outline"
-                      size="sm"
                       className="mt-2"
-                      onClick={() => {
-                        setLogoUrl(null);
-                      }}
-                    >
-                      Remover
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <div className="rounded-lg border-2 border-dashed border-gray-300 p-6 text-center transition-colors hover:border-gray-400">
-                      <Upload className="mx-auto mb-2 h-8 w-8 text-gray-400" />
-                      <p className="mb-2 text-sm text-gray-600">
-                        Clique para fazer upload do logo
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        PNG, JPG ou JPEG até 5MB
-                      </p>
-                    </div>
-                    <input
-                      id="logo"
-                      type="file"
-                      accept="image/*"
-                      onChange={onFileChange}
-                      className="hidden"
                       disabled={isUploading}
-                    />
-                    <label
-                      htmlFor="logo"
-                      className={`cursor-pointer ${
-                        isUploading ? "pointer-events-none opacity-50" : ""
-                      }`}
+                      asChild
                     >
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="mt-2"
-                        disabled={isUploading}
-                        asChild
-                      >
-                        <span>
-                          {isUploading ? (
-                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Fazendo upload...
-                            </>
-                          ) : (
-                            "Selecionar arquivo"
-                          )}
-                        </span>
-                      </Button>
-                    </label>
-                  </div>
-                )}
-              </div>
+                      <span>
+                        {isUploading ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Fazendo upload...
+                          </>
+                        ) : (
+                          "Selecionar arquivo"
+                        )}
+                      </span>
+                    </Button>
+                  </label>
+                </div>
+              )}
             </div>
 
             {/* Nome da Clínica */}
