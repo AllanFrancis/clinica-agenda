@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { getUserClinicsAction } from "@/actions/get-user-clinics";
 import {} from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@/lib/auth";
@@ -14,7 +15,20 @@ const AuthenticationPage = async () => {
   });
 
   if (session?.user) {
-    redirect("/dashboard");
+    try {
+      const userClinics = await getUserClinicsAction();
+
+      console.log("User clinics:", userClinics);
+
+      if (userClinics.length === 0) {
+        redirect("/onboarding");
+      } else {
+        redirect("/dashboard");
+      }
+    } catch (error) {
+      console.error("Error checking user clinics:", error);
+      redirect("/dashboard");
+    }
   }
   return (
     <div className="flex h-screen w-screen items-center justify-center">

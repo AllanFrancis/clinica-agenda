@@ -18,9 +18,12 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+
 interface Clinic {
   id: string;
   name: string;
+  logo: string | null;
   createdAt: Date;
   updatedAt: Date | null;
   joinedAt: Date;
@@ -60,9 +63,10 @@ export function ClinicSwitcher({ clinics }: { clinics: Clinic[] }) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                <Building2 className="size-4" />
-              </div>
+              <Avatar className="rounded-md">
+                <AvatarImage src={activeClinic.logo || ""} />
+                <AvatarFallback>{activeClinic.name.charAt(0)}</AvatarFallback>
+              </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
                   {activeClinic.name}
@@ -87,9 +91,10 @@ export function ClinicSwitcher({ clinics }: { clinics: Clinic[] }) {
                 onClick={() => setActiveClinic(clinic)}
                 className="gap-2 p-2"
               >
-                <div className="flex size-6 items-center justify-center rounded-md border">
-                  <Building2 className="size-3.5 shrink-0" />
-                </div>
+                <Avatar className="rounded-md">
+                  <AvatarImage src={clinic.logo || ""} />
+                  <AvatarFallback>{clinic.name.charAt(0)}</AvatarFallback>
+                </Avatar>
                 <div className="flex-1">
                   <div className="font-medium">{clinic.name}</div>
                   <div className="text-muted-foreground text-xs">

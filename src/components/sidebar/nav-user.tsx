@@ -9,6 +9,7 @@ import {
   LogOutIcon,
   Sparkles,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -30,6 +31,16 @@ import { authClient } from "@/lib/auth-client";
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await authClient.signOut();
+      router.push("/authentication");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -98,7 +109,7 @@ export function NavUser({ user }: { user: User }) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={async () => await authClient.signOut()}>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOutIcon />
               Sair do sistema
             </DropdownMenuItem>

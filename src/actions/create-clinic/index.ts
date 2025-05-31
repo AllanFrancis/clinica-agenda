@@ -7,7 +7,12 @@ import { db } from "@/db";
 import { clinicsTable, usersToClinicsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
-export const createClinicAction = async (name: string) => {
+interface CreateClinicData {
+  name: string;
+  logo?: string;
+}
+
+export const createClinicAction = async (data: CreateClinicData) => {
   // Verificar se o usuario esta logado
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -21,7 +26,8 @@ export const createClinicAction = async (name: string) => {
   const [clinic] = await db
     .insert(clinicsTable)
     .values({
-      name,
+      name: data.name,
+      logo: data.logo,
     })
     .returning();
 

@@ -16,7 +16,7 @@ export default async function Page() {
   const clinics = await getUserClinicsAction();
 
   if (clinics.length === 0) {
-    redirect("/clinic-form");
+    redirect("/onboarding");
   }
 
   return <div className="flex flex-1 flex-col gap-4 p-4">Dashboard</div>;
