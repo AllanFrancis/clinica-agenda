@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,7 @@ const registerSchema = z.object({
 const SignUpForm = () => {
   const router = useRouter();
 
-  const formRegister = useForm<z.infer<typeof registerSchema>>({
+  const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",
@@ -56,24 +57,29 @@ const SignUpForm = () => {
         onSuccess: () => {
           router.push("/dashboard");
         },
+        onError: (ctx) => {
+          if (ctx.error.code === "USER_ALREADY_EXISTS") {
+            toast.error("Já existe uma conta com este e-mail.");
+            return;
+          }
+
+          toast.error("Erro ao criar a conta");
+        },
       },
     );
   }
 
   return (
     <Card>
-      <Form {...formRegister}>
-        <form
-          onSubmit={formRegister.handleSubmit(onSubmit)}
-          className="space-y-4"
-        >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <CardHeader>
             <CardTitle>Criar conta</CardTitle>
             <CardDescription>Crie uma conta para continuar</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             <FormField
-              control={formRegister.control}
+              control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
@@ -86,7 +92,7 @@ const SignUpForm = () => {
               )}
             />
             <FormField
-              control={formRegister.control}
+              control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
@@ -99,7 +105,7 @@ const SignUpForm = () => {
               )}
             />
             <FormField
-              control={formRegister.control}
+              control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
@@ -113,11 +119,8 @@ const SignUpForm = () => {
             />
           </CardContent>
           <CardFooter>
-            <Button
-              className="w-full"
-              disabled={formRegister.formState.isSubmitting}
-            >
-              {formRegister.formState.isSubmitting && (
+            <Button className="w-full" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
               Criar conta
