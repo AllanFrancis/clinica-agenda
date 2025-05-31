@@ -17,6 +17,7 @@ export const createClinicAction = async (name: string) => {
     throw new Error("Usuário não autenticado");
   }
 
+  // returning retorna o objeto inserido
   const [clinic] = await db
     .insert(clinicsTable)
     .values({

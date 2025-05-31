@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { db } from "@/db";
 import { usersToClinicsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -28,7 +29,13 @@ const DashboardPage = async () => {
 
   return (
     <div>
-      <h1>Dashboard</h1>
+      <Avatar className="border-primary h-20 w-20 border-4 shadow-md">
+        <AvatarImage
+          src={session?.user?.image || "https://i.pravatar.cc/300"}
+          alt={session?.user?.name || "User Avatar"}
+        />
+        <AvatarFallback>{session?.user?.name?.charAt(0) || "U"}</AvatarFallback>
+      </Avatar>
       <h1>{session?.user?.name}</h1>
       <h1>{session?.user?.email}</h1>
       <SignOutButton />
