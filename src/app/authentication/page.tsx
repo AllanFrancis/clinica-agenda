@@ -17,9 +17,6 @@ const AuthenticationPage = async () => {
   if (session?.user) {
     try {
       const userClinics = await getUserClinicsAction();
-
-      console.log("User clinics:", userClinics);
-
       if (userClinics.length === 0) {
         redirect("/onboarding");
       } else {
