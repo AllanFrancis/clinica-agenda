@@ -4,12 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2, Loader2, Upload } from "lucide-react";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { createClinicAction } from "@/actions/create-clinic";
-import { getUserClinicsAction } from "@/actions/get-user-clinics";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useClinic } from "@/contexts/clinic-context";
 
 const onboardingSchema = z.object({
   name: z.string().min(1, "Nome da clínica é obrigatório"),
@@ -41,7 +40,7 @@ type OnboardingFormData = z.infer<typeof onboardingSchema>;
 export function OnboardingForm() {
   const [isUploading, setIsUploading] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
-  const { setClinics } = useClinic();
+  const router = useRouter();
 
   const form = useForm<OnboardingFormData>({
     resolver: zodResolver(onboardingSchema),
@@ -89,9 +88,8 @@ export function OnboardingForm() {
         logo: logoUrl || undefined,
       });
 
-      // Recarregar as clínicas no contexto
-      const updatedClinics = await getUserClinicsAction();
-      setClinics(updatedClinics);
+      // Redirecionar para o dashboard após criar a clínica
+      router.push("/dashboard");
     } catch (error) {
       if (isRedirectError(error)) {
         return;
