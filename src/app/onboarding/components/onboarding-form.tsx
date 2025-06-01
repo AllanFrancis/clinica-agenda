@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { createClinicAction } from "@/actions/create-clinic";
+import { getUserClinicsAction } from "@/actions/get-user-clinics";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -28,6 +29,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useClinic } from "@/contexts/clinic-context";
 
 const onboardingSchema = z.object({
   name: z.string().min(1, "Nome da clínica é obrigatório"),
@@ -39,6 +41,7 @@ type OnboardingFormData = z.infer<typeof onboardingSchema>;
 export function OnboardingForm() {
   const [isUploading, setIsUploading] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const { setClinics } = useClinic();
 
   const form = useForm<OnboardingFormData>({
     resolver: zodResolver(onboardingSchema),
@@ -79,13 +82,16 @@ export function OnboardingForm() {
       handleFileUpload(file);
     }
   };
-
   const onSubmit = async (data: OnboardingFormData) => {
     try {
       await createClinicAction({
         name: data.name,
         logo: logoUrl || undefined,
       });
+
+      // Recarregar as clínicas no contexto
+      const updatedClinics = await getUserClinicsAction();
+      setClinics(updatedClinics);
     } catch (error) {
       if (isRedirectError(error)) {
         return;

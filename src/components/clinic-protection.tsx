@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { getUserClinicsAction } from "@/actions/get-user-clinics";
+import { useHasClinics } from "@/contexts/clinic-context";
 
 interface ClinicProtectionProps {
   children: React.ReactNode;
@@ -12,30 +12,21 @@ interface ClinicProtectionProps {
 
 export function ClinicProtection({ children }: ClinicProtectionProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [hasClinic, setHasClinic] = useState(false);
+  const hasClinics = useHasClinics();
   const router = useRouter();
 
   useEffect(() => {
-    const checkUserClinics = async () => {
-      try {
-        const clinics = await getUserClinicsAction();
-
-        if (clinics.length === 0) {
-          router.push("/onboarding");
-          return;
-        }
-
-        setHasClinic(true);
-      } catch (error) {
-        console.error("Error checking user clinics:", error);
+    // Aguarda um pouco para o contexto carregar
+    const timer = setTimeout(() => {
+      if (!hasClinics) {
         router.push("/onboarding");
-      } finally {
-        setIsLoading(false);
+        return;
       }
-    };
+      setIsLoading(false);
+    }, 1000);
 
-    checkUserClinics();
-  }, [router]);
+    return () => clearTimeout(timer);
+  }, [hasClinics, router]);
 
   if (isLoading) {
     return (
@@ -47,8 +38,7 @@ export function ClinicProtection({ children }: ClinicProtectionProps) {
       </div>
     );
   }
-
-  if (!hasClinic) {
+  if (!hasClinics) {
     return null; // Já redirecionou para onboarding
   }
 

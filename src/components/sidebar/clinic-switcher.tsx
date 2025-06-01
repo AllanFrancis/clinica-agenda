@@ -18,21 +18,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useClinic } from "@/contexts/clinic-context";
 
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-interface Clinic {
-  id: string;
-  name: string;
-  logo: string | null;
-  createdAt: Date;
-  updatedAt: Date | null;
-  joinedAt: Date;
-}
-
-export function ClinicSwitcher({ clinics }: { clinics: Clinic[] }) {
+export function ClinicSwitcher() {
   const { isMobile } = useSidebar();
-  const [activeClinic, setActiveClinic] = React.useState(clinics[0]);
+  const { clinics, activeClinic, setActiveClinic } = useClinic();
 
   if (!activeClinic) {
     return (

@@ -2,7 +2,6 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import * as React from "react";
 
-import { getUserClinicsAction } from "@/actions/get-user-clinics";
 import { ClinicSwitcher } from "@/components/sidebar/clinic-switcher";
 import { NavMain } from "@/components/sidebar/nav-main";
 import { NavUser } from "@/components/sidebar/nav-user";
@@ -55,22 +54,6 @@ export async function AppSidebarServer({
     redirect("/authentication");
   }
 
-  let clinics: {
-    id: string;
-    name: string;
-    logo: string | null;
-    createdAt: Date;
-    updatedAt: Date | null;
-    joinedAt: Date;
-  }[] = [];
-
-  try {
-    clinics = await getUserClinicsAction();
-  } catch {
-    // If there's an error fetching clinics, use empty array
-    clinics = [];
-  }
-
   const user = {
     id: session.user.id,
     name: session.user.name || "Usuário",
@@ -83,8 +66,9 @@ export async function AppSidebarServer({
 
   return (
     <Sidebar collapsible="icon" {...props}>
+      {" "}
       <SidebarHeader>
-        <ClinicSwitcher clinics={clinics} />
+        <ClinicSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
