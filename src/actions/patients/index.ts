@@ -5,8 +5,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { db } from "@/db";
-import { patientsTable } from "@/db/schema";
+import { clinicsTable, patientsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { EmailService } from "@/lib/email-service";
 
 export interface CreatePatientData {
   name: string;
@@ -30,6 +31,7 @@ export async function createPatientAction(data: CreatePatientData) {
   }
 
   try {
+    // Create patient
     await db.insert(patientsTable).values({
       name: data.name,
       email: data.email,
@@ -37,6 +39,25 @@ export async function createPatientAction(data: CreatePatientData) {
       sex: data.sex,
       clinicId: data.clinicId,
     });
+
+    // Get clinic information for welcome email
+    const clinic = await db
+      .select({ name: clinicsTable.name })
+      .from(clinicsTable)
+      .where(eq(clinicsTable.id, data.clinicId))
+      .limit(1);
+
+    // Send welcome email (don't await to avoid blocking the action)
+    if (clinic[0]?.name) {
+      EmailService.sendWelcomeEmail({
+        to: data.email,
+        userName: data.name,
+        clinicName: clinic[0].name,
+      }).catch((error) => {
+        console.error("Error sending welcome email:", error);
+        // Email error should not prevent patient creation
+      });
+    }
 
     revalidatePath("/patients");
     return { success: true };
