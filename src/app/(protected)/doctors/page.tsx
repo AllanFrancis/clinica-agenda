@@ -1,7 +1,7 @@
 "use client";
 
 import { UserCheck } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { getClinicDoctorsAction } from "@/actions/doctors";
 import { useActiveClinic } from "@/contexts/clinic-context";
@@ -28,7 +28,7 @@ const DoctorsPage = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const activeClinic = useActiveClinic();
-  const loadDoctors = async () => {
+  const loadDoctors = useCallback(async () => {
     if (!activeClinic) return;
 
     setIsLoading(true);
@@ -40,11 +40,12 @@ const DoctorsPage = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [activeClinic]);
 
   useEffect(() => {
     loadDoctors();
-  }, [activeClinic, loadDoctors]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeClinic]);
 
   if (!activeClinic) {
     return (
